@@ -1,6 +1,6 @@
 +++
 title = "v1beta3 API Reference"
-date = 2025-04-22T14:19:41+01:00
+date = 2025-05-20T15:57:05+03:00
 weight = 11
 +++
 ## v1beta3
@@ -13,6 +13,7 @@ weight = 11
 * [AzureSpec](#azurespec)
 * [CNI](#cni)
 * [CanalSpec](#canalspec)
+* [CertificateAuthorithyConfig](#certificateauthorithyconfig)
 * [CiliumSpec](#ciliumspec)
 * [CloudProviderSpec](#cloudproviderspec)
 * [ClusterNetworkConfig](#clusternetworkconfig)
@@ -160,6 +161,17 @@ CanalSpec defines the Canal CNI plugin
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
 | mtu | MTU automatically detected based on the cloudProvider default value is 1450 | int | false |
+
+[Back to Group](#v1beta3)
+
+### CertificateAuthorithyConfig
+
+
+
+| Field | Description | Scheme | Required |
+| ----- | ----------- | ------ | -------- |
+| bundle | Bundle inline PEM encoded global CA | string | false |
+| file | File is a path to the CA bundle file, used as a replacement for Bundle | string | false |
 
 [Back to Group](#v1beta3)
 
@@ -483,6 +495,7 @@ HostConfig describes a single control plane or worker node.
 | isLeader | IsLeader indicates this host as a session leader. Default value is populated at the runtime. | bool | false |
 | taints | Taints are taints applied to nodes. Those taints are only applied when the node is being provisioned. If not provided (i.e. nil) for control plane nodes, it defaults to TaintEffectNoSchedule with key\n    node-role.kubernetes.io/control-plane\nExplicitly empty (i.e. []corev1.Taint{}) means no taints will be applied (this is default for worker nodes). | [][corev1.Taint](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#taint-v1-core) | false |
 | labels | Labels to be used to apply (or remove, with minus symbol suffix, see more kubectl help label) labels to/from node | map[string]string | false |
+| annotations | Annotations to be used to apply (or remove, with minus symbol suffix, see more kubectl help annotate) annotations to/from node | map[string]string | false |
 | kubelet | Kubelet | [KubeletConfig](#kubeletconfig) | false |
 | operatingSystem | OperatingSystem information, can be populated at the runtime. | OperatingSystemName | false |
 
@@ -530,7 +543,8 @@ KubeOneCluster is KubeOne Cluster API Schema
 | dynamicWorkers | DynamicWorkers describes the worker nodes that are managed by Kubermatic machine-controller/Cluster-API. | [][DynamicWorkerConfig](#dynamicworkerconfig) | false |
 | machineController | MachineController configures the Kubermatic machine-controller component. | *[MachineControllerConfig](#machinecontrollerconfig) | false |
 | operatingSystemManager | OperatingSystemManager configures the Kubermatic operating-system-manager component. | *[OperatingSystemManagerConfig](#operatingsystemmanagerconfig) | false |
-| caBundle | CABundle PEM encoded global CA | string | false |
+| caBundle | CABundle PEM encoded global CA. Deprecated: Use CertificateAuthorithyConfig instead. Will be overriten by certificateAuthority.bundle if set. | string | false |
+| certificateAuthority | CertificateAuthority configures Central Authority certificate. | [CertificateAuthorithyConfig](#certificateauthorithyconfig) | false |
 | features | Features enables and configures additional cluster features. | [Features](#features) | false |
 | addons | Addons are used to deploy additional manifests. | *[Addons](#addons) | false |
 | systemPackages | SystemPackages configure kubeone behaviour regarding OS packages. | *[SystemPackages](#systempackages) | false |
